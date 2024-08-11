@@ -11,6 +11,3 @@
 ## Compile project
 
     mvn clean install
-
-
-mvn archetype:generate -DgroupId=com.rama.app -DartifactId=java-data-app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false

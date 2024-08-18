@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create an SQS queue
+
+Resources:
+  # Queue for receive text message
+  TextMessageEventQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "text-message-event-queue"
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - TextMessageEventQueueDLQ
+            - Arn
+        maxReceiveCount: 5 # max number of message
+      VisibilityTimeout: 60 # in seconds
+      MessageRetentionPeriod: 1209600 # in seconds (14 days)
+      DelaySeconds: 0
+      MaximumMessageSize: 262144 # in bytes (256 KB)
+
+  #  DLQ for backup message for failure
+  TextMessageEventQueueDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "text-message-events-dlq"
+      VisibilityTimeout: 60 # in seconds
+      MessageRetentionPeriod: 1209600 # in seconds (14 days)
+
+Outputs:
+  QueueURL:
+    Description: "URL of the newly created SQS queue"
+    Value: !Ref TextMessageEventQueue
+  QueueArn:
+    Description: "ARN of the newly created SQS queue"
+    Value: !GetAtt TextMessageEventQueue.Arn
+

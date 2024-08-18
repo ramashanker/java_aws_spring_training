@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create an SQS queue
+
+Resources:
+  MySQSQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "MyQueue"
+      VisibilityTimeout: 30 # in seconds
+      MessageRetentionPeriod: 345600 # in seconds (4 days)
+      DelaySeconds: 0
+      MaximumMessageSize: 262144 # in bytes (256 KB)
+      ReceiveMessageWaitTimeSeconds: 0
+
+Outputs:
+  QueueURL:
+    Description: "URL of the newly created SQS queue"
+    Value: !Ref MySQSQueue
+  QueueArn:
+    Description: "ARN of the newly created SQS queue"
+    Value: !GetAtt MySQSQueue.Arn
